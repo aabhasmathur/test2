@@ -1,0 +1,35 @@
+version: '3.7'
+services:
+  db:
+    build:
+      context: .
+      dockerfile: ./mysql/Dockerfile.yaml
+    image: tutorial-db
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+  app:
+    build:
+      context: .
+      dockerfile: ./php/Dockerfile.yaml
+    image: tutorial-php
+    restart: always
+    volumes:
+      - ./php:/usr/src/app/
+    ports:
+      - 8000:8000
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8080:80
+    environment:
+      PMA_USER: root
+      PMA_PASSWORD: example
+      PMA_ARBITRARY: 1
+volumes:
+  mysql-data:
